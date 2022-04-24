@@ -5,20 +5,32 @@ import { useNavigate } from "react-router-dom";
 
 function Track() {
   const history = useNavigate();
-  let handleSubmit1 = () => {
+  let trackData = () => {
     const namename = localStorage.getItem("email");
     let Tracking = async () => {
       let formField = new FormData();
       formField.append("email", namename);
-      formField.append("action", "tracking");
+      formField.append("action", "sendhistory");
       await axios({
         method: "POST",
-        url: "/api/user/tracking/",
+        url: "/api/user/sendhistory/",
         data: formField,
       }).then((response) => {
-        console.log(response.data);
         let temp = response.data;
-        let length = temp.length;
+        localStorage.setItem("keyboardHistory", temp.keyboard);
+        let word = temp.wordlist;
+        let arrayList = word.split(",");
+        let row = 5;
+        let tempArray = [];
+        for (let i = 0; i < 5; i++) {
+          if (arrayList[i] == "$") {
+            tempArray.push("");
+            row = row - 1;
+          } else {
+            tempArray.push(arrayList[i]);
+          }
+        }
+        let length = tempArray.length;
         let aa = "";
         let bb = "";
         let cc = "";
@@ -29,27 +41,13 @@ function Track() {
           alert("This is the new game");
           Clear();
           history("/home");
-        }
-        if (length == 1) {
-          aa = temp[0];
-        } else if (length == 2) {
-          aa = temp[0];
-          bb = temp[1];
-        } else if (length == 3) {
-          aa = temp[0];
-          bb = temp[1];
-          cc = temp[2];
-        } else if (length == 4) {
-          aa = temp[0];
-          bb = temp[1];
-          cc = temp[2];
-          dd = temp[3];
-        } else if (length == 5) {
-          aa = temp[0];
-          bb = temp[1];
-          cc = temp[2];
-          dd = temp[3];
-          ee = temp[4];
+        } else {
+          localStorage.setItem("initWordList", tempArray);
+          aa = tempArray[0];
+          bb = tempArray[1];
+          cc = tempArray[2];
+          dd = tempArray[3];
+          ee = tempArray[4];
         }
         localStorage.setItem("aa", aa);
         localStorage.setItem("bb", bb);
@@ -66,27 +64,10 @@ function Track() {
             url: "/api/user/sendkey/",
             data: formField,
           }).then((response) => {
-            console.log(response.data);
             localStorage.setItem("keywordss", response.data);
-            console.log(response.data);
           });
         };
         getKey();
-        let gethistory = async () => {
-          let formField = new FormData();
-          formField.append("email", namename);
-          formField.append("action", "sendhistory");
-          await axios({
-            method: "POST",
-            url: "/api/user/sendhistory/",
-            data: formField,
-          }).then((response) => {
-            console.log(response.data);
-            localStorage.setItem("keyboardHistory", response.data);
-            console.log(response.data);
-          });
-        };
-        gethistory();
         const delay = (ms) => new Promise((res) => setTimeout(res, ms));
         const waiting = async () => {
           await delay(80);
@@ -151,7 +132,7 @@ function Track() {
   };
   return (
     <div className="app-style">
-      <button onClick={handleSubmit1}>Lastest Game</button>
+      <button onClick={trackData}>Lastest Game</button>
       <button onClick={Clear}>New Game</button>
     </div>
   );

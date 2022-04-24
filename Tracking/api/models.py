@@ -16,6 +16,7 @@ class Key(models.Model):
 class UserHistory(models.Model):
     username = models.TextField(primary_key=True) 
     keyboard = models.TextField()   
+    wordlist = models.TextField(max_length=140, default='SOME STRING')   
     def __str__(self):
       return self.username
 

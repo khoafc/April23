@@ -14,6 +14,7 @@ from .models import Key
 from .serializers import UserNoteSerializer
 from .serializers import LetterSerializer
 from .serializers import UserDataSerializer
+from .serializers import HistorySerializer
 from api import serializers
 import random
 # from api import serializers
@@ -128,111 +129,6 @@ def  getWord(request):
         return Response("OK OK")
     return Response("Tao Bi Loi lam roi")
 
-
-@api_view(['POST'])
-def  getData(request):
-    if request.POST.get('action') == 'word1':
-        
-        email = request.POST.get('email')
-        value = request.POST.get('value')
-        try:   
-            obj = Data.objects.get(username = email)
-        except:
-            obj = None
-            return Response("KHOIA")
-        obj.word1 = value
-        obj.save()
-
-    if request.POST.get('action') == 'word2':
-        email = request.POST.get('email')
-        value = request.POST.get('value')
-        print(email)
-        print(value)
-        try:
-            obj = Data.objects.get(username = email)
-            
-        except:
-            obj = None
-        if obj is None:
-            return Response(None)
-        obj.word2 = value
-        obj.save()
-
-    if request.POST.get('action') == 'word3':
-        email = request.POST.get('email')
-        value = request.POST.get('value')
-        try:
-            obj = Data.objects.get(username = email)
-        except:
-            obj = None
-        if obj is None:
-            return Response(None)
-        obj.word3 = value
-        obj.save()
-    if request.POST.get('action') == 'word4':
-        email = request.POST.get('email')
-        value = request.POST.get('value')
-        try:
-            obj = Data.objects.get(username = email)
-   
-        except:
-            obj = None
-        if obj is None:
-            return Response(None)
-        obj.word4 = value
-        obj.save()
-        
-    if request.POST.get('action') == 'word5':
-        email = request.POST.get('email')
-        value = request.POST.get('value')
-        try:
-            obj = Data.objects.get(username = email)
-            
-        except:
-            obj = None
-        if obj is None:
-            return Response(None)
-        obj.word5 = value
-        obj.save()
-     
-
-    return Response(None)
-
-@api_view(['POST'])
-def  getTracking(request):
-    if request.POST.get('action') == 'tracking':
-        email = request.POST.get('email')
-    try:
-        obj = Data.objects.get(username = email)
-    except:
-        obj = None  
-    if obj is None:
-        return Response(None)
-    array =[]
-    if obj.word5 !='':
-        array.append(obj.word1)
-        array.append(obj.word2)
-        array.append(obj.word3)
-        array.append(obj.word4)
-        array.append(obj.word5)
-    elif(obj.word4 !=''):
-        array.append(obj.word1)
-        array.append(obj.word2)
-        array.append(obj.word3)
-        array.append(obj.word4)
-    elif(obj.word3 !=''):
-        array.append(obj.word1)
-        array.append(obj.word2)
-        array.append(obj.word3)
-    elif(obj.word2 !=''):
-        array.append(obj.word1)
-        array.append(obj.word2)
-    elif(obj.word1 !=''):
-        array.append(obj.word1)
-
-    return Response(array)
-
-
 @api_view(['POST'])
 def  clear(request):
     if request.POST.get('action') == 'clear':
@@ -247,6 +143,7 @@ def  clear(request):
         obj.save()
         obj2 = UserHistory.objects.get(username = email)
         obj2.keyboard = ""
+        obj2.wordlist= ""
         obj2.save()
 
     except:
@@ -277,14 +174,29 @@ def getHistory(request):
         valuee = request.POST.get('value')
         obj = UserHistory.objects.get(username = email)
         obj.keyboard = valuee
-        obj.save()
+        # obj.save()
+        obj.save(update_fields=["keyboard"]) 
         print("tOAO LA KHAO")
         return Response(None)
+    if request.POST.get('action') == 'getwordlist':
+        email = request.POST.get('email')
+        valuee = request.POST.get('value')
+        obj = UserHistory.objects.get(username = email)
+        obj.wordlist = valuee
+        # obj.save()
+        obj.save(update_fields=["wordlist"]) 
+        print("tOAO LA KHAO do nha")
+        print(valuee)
+        print(obj.wordlist)
+        return Response(valuee)
 @api_view(['POST'])
 def sendHistory(request):
     if request.POST.get('action') == 'sendhistory':
         email = request.POST.get('email')
         obj = UserHistory.objects.get(username = email)
-        value = obj.keyboard
-        print(value)
-        return Response(value)
+        cc =  HistorySerializer(obj)
+        print("KHOAKHOA")
+        print(cc.data)
+        print("TITI")
+        return Response(cc.data)
+  

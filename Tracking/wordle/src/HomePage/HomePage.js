@@ -12,13 +12,9 @@ import axios from "axios";
 import gameUtils from "../Utils/gameUtils";
 
 function HomePage() {
-  // let word = "APPLE";
   let word = localStorage.getItem("keywordss");
   const history = useNavigate();
-
   const [input, setInput] = useState("");
-  // const [row, setRow] = useState(0);
-  // const [wordList, setWordList] = useState(["", "", "", "", "", ""]);
   let aaaaa = [""];
   const [showWinPopUp, setShowWinPopUp] = useState(false);
   let a = "";
@@ -31,7 +27,6 @@ function HomePage() {
   let ccc = [""];
   let ddd = [""];
   let eee = [""];
-  // let aaaaa = ['Y','N','Z'];
   try {
     let bbbbb = localStorage.getItem("keyboardHistory");
     if (bbbbb != "NONE") {
@@ -171,7 +166,6 @@ function HomePage() {
   const [savedColor, setSavedColor] = useState([aaa, bbb, ccc, ddd, eee, [""]]);
   const [row, setRow] = useState(time);
   const [wordList, setWordList] = useState([a, b, c, d, e, ""]);
-  const [count, setCount] = useState(0);
   const namename = localStorage.getItem("email");
 
   let ProfilePage = () => {
@@ -187,88 +181,29 @@ function HomePage() {
 
   function updateWordList(newArray) {
     setWordList(newArray);
-    setCount(count + 1);
-    if (count == 0) {
-      let Word1 = async () => {
-        let formField = new FormData();
-        let tempword = newArray[count];
-        formField.append("value", tempword);
-        formField.append("email", namename);
-        formField.append("action", "word1");
-        await axios({
-          method: "POST",
-          url: "/api/user/getdata/",
-          data: formField,
-        }).then((response) => {
-          console.log(response.data);
-        });
-      };
-      Word1();
-    } else if (count == 1) {
-      let Word2 = async () => {
-        let formField = new FormData();
-        let tempword = newArray[count];
-        formField.append("value", tempword);
-        formField.append("email", namename);
-        formField.append("action", "word2");
-        await axios({
-          method: "POST",
-          url: "/api/user/getdata/",
-          data: formField,
-        }).then((response) => {
-          console.log(response.data);
-        });
-      };
-      Word2();
-    } else if (count == 2) {
-      let Word3 = async () => {
-        let formField = new FormData();
-        let tempword = newArray[count];
-        formField.append("value", tempword);
-        formField.append("email", namename);
-        formField.append("action", "word3");
-        await axios({
-          method: "POST",
-          url: "/api/user/getdata/",
-          data: formField,
-        }).then((response) => {
-          console.log(response.data);
-        });
-      };
-      Word3();
-    } else if (count == 3) {
-      let Word4 = async () => {
-        let formField = new FormData();
-        let tempword = newArray[count];
-        formField.append("value", tempword);
-        formField.append("email", namename);
-        formField.append("action", "word4");
-        await axios({
-          method: "POST",
-          url: "/api/user/getdata/",
-          data: formField,
-        }).then((response) => {
-          console.log(response.data);
-        });
-      };
-      Word4();
-    } else if (count == 4) {
-      let Word5 = async () => {
-        let formField = new FormData();
-        let tempword = newArray[count];
-        formField.append("value", tempword);
-        formField.append("email", namename);
-        formField.append("action", "word5");
-        await axios({
-          method: "POST",
-          url: "/api/user/getdata/",
-          data: formField,
-        }).then((response) => {
-          console.log(response.data);
-        });
-      };
-      Word5();
+    let temp = [];
+    for (let i = 0; i < newArray.length; i++) {
+      if (newArray[i] == "") {
+        temp.push("$");
+      } else {
+        temp.push(newArray[i]);
+      }
     }
+    let UserHistory = async () => {
+      let formField = new FormData();
+      formField.append("value", temp);
+
+      formField.append("email", namename);
+      formField.append("action", "getwordlist");
+      await axios({
+        method: "POST",
+        url: "/api/user/gethistory/",
+        data: formField,
+      }).then((response) => {
+        console.log(response.data);
+      });
+    };
+    UserHistory();
   }
 
   function updateUsedLetters(newArray) {

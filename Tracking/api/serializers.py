@@ -1,6 +1,6 @@
 from dataclasses import fields
 from rest_framework.serializers import ModelSerializer
-from .models import Key
+from .models import Key, UserHistory
 from .models import User
 from .models import UserData
 from .models import A
@@ -12,13 +12,10 @@ class KeySerializer(ModelSerializer):
         model  = Key
         fields = '__all__'
 
-
-
 class UserNoteSerializer(ModelSerializer):
     class Meta:
         model  = User
         fields = '__all__'
-
 
 class UserDataSerializer(ModelSerializer):
     class Meta:
@@ -32,4 +29,8 @@ class LetterSerializer(ModelSerializer):
 class DataSerializer(ModelSerializer):
     class Meta:
         model  = Data
+        fields = '__all__'
+class HistorySerializer(ModelSerializer):
+    class Meta:
+        model  = UserHistory
         fields = '__all__'
