@@ -174,20 +174,14 @@ def getHistory(request):
         valuee = request.POST.get('value')
         obj = UserHistory.objects.get(username = email)
         obj.keyboard = valuee
-        # obj.save()
         obj.save(update_fields=["keyboard"]) 
-        print("tOAO LA KHAO")
         return Response(None)
     if request.POST.get('action') == 'getwordlist':
         email = request.POST.get('email')
         valuee = request.POST.get('value')
         obj = UserHistory.objects.get(username = email)
         obj.wordlist = valuee
-        # obj.save()
         obj.save(update_fields=["wordlist"]) 
-        print("tOAO LA KHAO do nha")
-        print(valuee)
-        print(obj.wordlist)
         return Response(valuee)
 @api_view(['POST'])
 def sendHistory(request):
@@ -195,8 +189,5 @@ def sendHistory(request):
         email = request.POST.get('email')
         obj = UserHistory.objects.get(username = email)
         cc =  HistorySerializer(obj)
-        print("KHOAKHOA")
-        print(cc.data)
-        print("TITI")
         return Response(cc.data)
   
